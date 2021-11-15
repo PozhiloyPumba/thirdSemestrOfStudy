@@ -6,99 +6,90 @@
 #include <sys/time.h>
 #include <ctype.h>
 #include <string.h>
-#include <readline/readline.h>
-#include <readline/history.h>
 
 //=====================================================================================================
 
-#define SIZE_BUFFER 4096
 #define INWORD 1
 #define OUTWORD 0
 #define LIM_OF_MY_SHELL 1000
+#define CLOSE(fd1)      if(close(fd1) < 0){ 		\
+                            perror("Error close");	\
+                            return errno;			\
+                        }
 
 //=====================================================================================================
 
-int main()
-{
-	while(1)
-	{
-		printf("my_shell > ");
+int main() {
 
-		char *command = readline(NULL);
-		if(command == NULL || !strcmp(command, "exit")){
-			if(command != NULL)
-				free(command);
-			return 0;
-		}
+    char cmd_string[LIM_OF_MY_SHELL];   // it is string from user
+    char* commands[LIM_OF_MY_SHELL];    // it is array of pointers to commands
+    char* cmd[LIM_OF_MY_SHELL];         // it is array of pointers to args of command
 
-		char count_args[LIM_OF_MY_SHELL];
-		size_t count_commands = 0;
-		int flag_word = OUTWORD, count_words = 0;
+    while(!feof(stdin)) {
 
-		for(size_t i = 0; command[i] != 0 || count_args < LIM_OF_MY_SHELL; ++i)
-		{
-			
-		}
+        printf("my_shell > ");
 
-		// int pipe_fd[2];
-		// if(pipe(pipe_fd)){
-		// 	perror("Error of pipe");
-		// 	return errno;
-		// }
-		
-		// pid_t pid = fork();
-		// if (pid == -1){
-		// 	perror("Error of fork");
-		// 	return errno;
-		// }
+        fgets(cmd_string, LIM_OF_MY_SHELL, stdin);
 
-		// if(pid == 0){
-		// 	int error = dup2(pipe_fd[1], STDOUT_FILENO);
-		// 	if(error == -1){
-		// 		perror("Error of dup");
-		// 		return errno;
-		// 	}
-		// 	if(close(pipe_fd[0])){
-		// 		perror("Error of close");
-		// 		return errno;
-		// 	}
-		// 	if(close(pipe_fd[1])){
-		// 		perror("Error of close");
-		// 		return errno;
-		// 	}
-		// }
-		// else
-		// 	close(pipe_fd[1]);
+        cmd_string[strlen(cmd_string) - 1] = 0;
 
+        if ((cmd_string == NULL) || !strcmp(cmd_string, "exit"))
+            break;
+        
+        int commands_count = 0;
+        commands[commands_count] = strtok(cmd_string, "|");
+        while (commands[++commands_count] = strtok(NULL, "|"));    //(not ==) spliting into commands
 
-		// if(pid == 0){
-		// 	int shift = 0;
+        int pass_pipe = -1;
+        int pid;
+        int pipefd[2];
+        for (int i = 0; i < commands_count; i++) {
+            
+            if(pipe(pipefd) == -1){
+                printf("Pipe error\n");
+                break;
+            }
 
-		// 	int error = execvp(argv[1 + shift], argv + 1);
-		// 	if(error){
-		// 		perror("Error of exec");
-		// 		return errno;
-		// 	}
-		// 	return 0;
-		// }
-		
-		// char str[SIZE_BUFFER];
-		
-		// while(1)
-		// {
-		// 	int end = read(pipe_fd[0], str, SIZE_BUFFER);
-		// 	if(end < 0) {
-		// 		perror("Error read");
-		// 		return errno;
-		// 	}
-		// 	if(!end)
-		// 		break;
+            pid = fork();
+            if(pid == -1){
+                printf("Fork error\n");
+                break;
+            }
 
-		// }
-		// close(pipe_fd[0]);
+            if(pid) {
+                CLOSE(pipefd[1]);
+                if (pass_pipe != -1) CLOSE(pass_pipe);
+                pass_pipe = pipefd[0];
+            }
+            else {
+                if(pass_pipe != -1)
+                    if(dup2(pass_pipe, 0) == -1){
+                        perror ("copy stdin error");
+                        return -1;
+                    }
 
-		// wait(NULL);
-	}
+                if(i < (commands_count - 1))
+                    if(dup2(pipefd[1], 1) == -1){
+                        perror ("copy stdout error");
+                        return -1;
+                    }
 
-	return 0;
+                CLOSE(pipefd[0]);
+                CLOSE(pipefd[1]);
+                if (pass_pipe != -1) CLOSE(pass_pipe);
+
+                int num_of_args = 0;
+                cmd[num_of_args] = strtok(commands[i], " ");
+                while (cmd[++num_of_args] = strtok(NULL, " ")); //(not ==) spliting into args in command
+                
+                execvp (cmd[0], cmd);
+                perror(cmd[0]);
+                return -1;
+            }
+        }
+        waitpid(pid, NULL, WUNTRACED);
+        CLOSE(pass_pipe);
+    }
+
+    return 0;
 }
