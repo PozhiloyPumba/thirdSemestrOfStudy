@@ -36,11 +36,11 @@ int main(int argc, char *argv[]) {
                                                 //4rd from end bit is flag for "-n" option
                                                 //5rd from end bit is flag for "-R" option
 
-    if (optind == argc) {
+    if (optind == argc)
         ls_func("./", options);
-    } else {
+    else
         ls_func(argv[optind], options);
-    }
+    
     return 0;
 }
 
@@ -72,25 +72,15 @@ char fill_options(int argc, char *argv[]) {
                         //5rd from end bit is flag for "-R" option
 
 
-    while((c = getopt_long(argc, argv, "alinR", longopts, NULL)) != -1)
-    {
-        switch(c){
-            case 'a':
-                flags |= 1;
-                break;
-            case 'l':
-                flags |= 1 << 1;
-                break;
-            case 'i':
-                flags |= 1 << 2;
-                break;
-            case 'n':
-                flags |= 1 << 1;
-                flags |= 1 << 3;
-                break;
-            case 'R':
-                flags |= 1 << 4;
-                break;
+    while((c = getopt_long(argc, argv, "alinR", longopts, NULL)) != -1) {
+
+        switch(c) {
+
+            case 'a': flags |= 1;       break;
+            case 'l': flags |= 1 << 1;  break;
+            case 'i': flags |= 1 << 2;  break;
+            case 'n': flags |= 5 << 1;  break;
+            case 'R': flags |= 1 << 4;  break;
             default:
                 return 0;
         }
@@ -124,6 +114,7 @@ int print_file(char *dir_name, char* name, char opts){
         lstat(full_dir, &statbuf);
 
         if (errno) {
+
             perror("lstat error");
             return -1;
         }
@@ -134,10 +125,12 @@ int print_file(char *dir_name, char* name, char opts){
         lstat(full_dir, &statbuf);
 
         if (errno) {
+
             perror("lstat error");
             return -1;
         }
         switch (statbuf.st_mode & S_IFMT) {
+
             case S_IFIFO:   printf("p"); break;
             case S_IFCHR:   printf("c"); break;
             case S_IFDIR:   printf("d"); break;
@@ -148,15 +141,19 @@ int print_file(char *dir_name, char* name, char opts){
             default: printf("unknown?");
         }
 
-        for(int i = 8; i >= 0; i--){
+        for(int i = 8; i >= 0; i--) {
+
             if (statbuf.st_mode & (1 << i)) {
+
                 switch ((i + 1) % 3) {
+
                     case 0: printf("r"); break;
                     case 1: printf("x"); break;
                     case 2: printf("w"); break;
                     default: printf("WHAAAAAT????\n"); return -1;
                 }
-            } else printf("-");
+            } 
+            else printf("-");
         }
 
         printf(" %lu ", statbuf.st_nlink);
@@ -174,24 +171,22 @@ int print_file(char *dir_name, char* name, char opts){
             if (!errno)
                 printf("%s ", gr->gr_name);
             else printf("? ");
-
-        } else
+        } 
+        else
             printf("%d %d ", statbuf.st_uid, statbuf.st_gid);
 
         printf("%6lu ", statbuf.st_size);
 
         char time_str[15] = {0};
-        if (strftime(time_str, 15, "%b %d %H:%M", gmtime(&statbuf.st_mtime)) == 0)
+        if (!strftime(time_str, 15, "%b %d %H:%M", gmtime(&statbuf.st_mtime)))
             printf("?");
         else
             printf("%s ", time_str);
 
-        printf("%s ", name);
-        printf("\n");
-
-    } else {
+        printf("%s \n", name);
+    } 
+    else
         printf("%s  ", name);
-    }
 
     free (full_dir);
 
@@ -204,6 +199,7 @@ int ls_func(char* dir_name, char option) {
 
     DIR* cur_dir = opendir(dir_name);
     if (cur_dir == NULL) {
+    
         perror("uls (dir error)");
         return -1;
     }
@@ -219,7 +215,9 @@ int ls_func(char* dir_name, char option) {
 
     struct dirent* file;
     int status = 0;
+    
     while(1){
+        
         status = read_dir (cur_dir, &file);
         
         if (status) break;
@@ -239,15 +237,18 @@ int ls_func(char* dir_name, char option) {
     printf("\n");
 
     if (catch_bit (option, 4)) {
+        
         printf("\n");
         rewinddir(cur_dir);
 
-        while(1){
+        while(1) {
             status = read_dir(cur_dir, &file);
-            if (status != 0) break;
+            if (status) break;
 
             if (file->d_type == DT_DIR) {
+                
                 if (!(!strcmp(file->d_name, ".") || !strcmp(file->d_name, ".."))) {
+                
                     if (file->d_name[0] != '.' || catch_bit (option, 0)) {
                         
                         size_t name_len = strlen(dir_name) + strlen(file->d_name) + 3;
@@ -280,12 +281,9 @@ int read_dir(DIR* dir, struct dirent** file) {
 
     *file = readdir(dir);
     if (*file == NULL) {
-        if (errno) {
+        if (errno)
             perror("file error");
-            return -1;
-        } else {
-            return 1;
-        }
+        return 1;
     }
     return 0;
 }
