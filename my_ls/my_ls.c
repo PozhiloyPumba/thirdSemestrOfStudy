@@ -248,7 +248,7 @@ int ls_func(char* dir_name, char option) {
 
             if (file->d_type == DT_DIR) {
                 if (!(!strcmp(file->d_name, ".") || !strcmp(file->d_name, ".."))) {
-                    if (file->d_name[0] != '.' || !catch_bit (option, 0)) {
+                    if (file->d_name[0] != '.' || catch_bit (option, 0)) {
                         
                         size_t name_len = strlen(dir_name) + strlen(file->d_name) + 3;
                         char *full_dir = (char *) malloc (sizeof (char) * name_len);
