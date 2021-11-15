@@ -210,7 +210,7 @@ int ls_func(char* dir_name, char option) {
         
         printf("%s:\n", dir_name);
 
-        if (dir_name[strlen(dir_name) - 1] == '/') dir_name[len - 1] = '/';
+        if (len != strlen(dir_name)) dir_name[len - 1] = '/';
     }
 
     struct dirent* file;
