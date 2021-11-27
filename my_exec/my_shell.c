@@ -87,8 +87,12 @@ int main() {
                 return -1;
             }
         }
-        waitpid(pid, NULL, WUNTRACED);
+        
         CLOSE(pass_pipe);
+        
+        for (int i = 0; i < commands_count; i++)
+            wait(NULL);
+        
     }
 
     return 0;
