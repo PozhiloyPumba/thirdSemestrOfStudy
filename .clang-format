@@ -1,0 +1,25 @@
+---
+BasedOnStyle: Google
+---
+
+Language: Cpp
+
+AllowShortBlocksOnASingleLine: Empty
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+BinPackArguments: false
+BinPackParameters: false
+BreakConstructorInitializers: BeforeColon
+BreakBeforeTernaryOperators: false
+ColumnLimit: 200
+CommentPragmas: NOLINT:.*
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+Cpp11BracedListStyle: true
+DerivePointerAlignment: false
+FixNamespaceComments: true
+IndentWidth: 4
+PointerAlignment: Right
+TabWidth: 4
+UseTab: Never
