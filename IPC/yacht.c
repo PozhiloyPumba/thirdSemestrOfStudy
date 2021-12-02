@@ -19,7 +19,8 @@ int captainMode(int sem_id, int countRides, int countSeats);  // ))))
 
 //=====================================================================================================
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     if (argc != 4) {
         printf("Please, input correct num of arguments");
         return 0;
@@ -89,7 +90,8 @@ int main(int argc, char *argv[]) {
 
 //=====================================================================================================
 
-int captainMode(int sem_id, int countRides, int countSeats) {
+int captainMode(int sem_id, int countRides, int countSeats)
+{
     int captPid = fork();
     if (captPid == -1) {
         perror("Captain fork error");

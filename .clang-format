@@ -12,6 +12,7 @@ AllowShortLoopsOnASingleLine: false
 BinPackArguments: false
 BinPackParameters: false
 BreakConstructorInitializers: BeforeColon
+BreakBeforeBraces: Stroustrup
 BreakBeforeTernaryOperators: false
 ColumnLimit: 200
 CommentPragmas: NOLINT:.*

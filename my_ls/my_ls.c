@@ -28,7 +28,8 @@ int read_dir(DIR *dir, struct dirent **file);
 
 //=====================================================================================================
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     char options = fill_options(argc, argv);  // last bit is flag for "-a" option
                                               // 2nd from end bit is flag for "-l" option
                                               // 3rd from end bit is flag for "-i" option
@@ -45,13 +46,15 @@ int main(int argc, char *argv[]) {
 
 //=====================================================================================================
 
-int catch_bit(char opt, int shift) {
+int catch_bit(char opt, int shift)
+{
     return (opt >> shift) & 1;
 }
 
 //-----------------------------------------------------------------------------------------------------
 
-char fill_options(int argc, char *argv[]) {
+char fill_options(int argc, char *argv[])
+{
     struct option longopts[] = {{"all", 0, 0, 'a'}, {"long", 0, 0, 'l'}, {"inode", 0, 0, 'i'}, {"numeric-uid-gid", 0, 0, 'n'}, {"recursive", 0, 0, 'R'}, {0, 0, 0, 0}};
 
     int c;
@@ -88,7 +91,8 @@ char fill_options(int argc, char *argv[]) {
 
 //-----------------------------------------------------------------------------------------------------
 
-int print_file(char *dir_name, char *name, char opts) {
+int print_file(char *dir_name, char *name, char opts)
+{
     struct stat statbuf;
 
     size_t name_len = strlen(dir_name) + strlen(name) + 2;
@@ -164,7 +168,8 @@ int print_file(char *dir_name, char *name, char opts) {
                         printf("WHAAAAAT????\n");
                         return -1;
                 }
-            } else
+            }
+            else
                 printf("-");
         }
 
@@ -184,7 +189,8 @@ int print_file(char *dir_name, char *name, char opts) {
                 printf("%s ", gr->gr_name);
             else
                 printf("? ");
-        } else
+        }
+        else
             printf("%d %d ", statbuf.st_uid, statbuf.st_gid);
 
         printf("%6lu ", statbuf.st_size);
@@ -196,7 +202,8 @@ int print_file(char *dir_name, char *name, char opts) {
             printf("%s ", time_str);
 
         printf("%s \n", name);
-    } else
+    }
+    else
         printf("%s  ", name);
 
     free(full_dir);
@@ -206,7 +213,8 @@ int print_file(char *dir_name, char *name, char opts) {
 
 //-----------------------------------------------------------------------------------------------------
 
-int ls_func(char *dir_name, char option) {
+int ls_func(char *dir_name, char option)
+{
     DIR *cur_dir = opendir(dir_name);
     if (cur_dir == NULL) {
         perror("uls (dir error)");
@@ -285,7 +293,8 @@ int ls_func(char *dir_name, char option) {
 
 //-----------------------------------------------------------------------------------------------------
 
-int read_dir(DIR *dir, struct dirent **file) {
+int read_dir(DIR *dir, struct dirent **file)
+{
     *file = readdir(dir);
     if (*file == NULL) {
         if (errno)

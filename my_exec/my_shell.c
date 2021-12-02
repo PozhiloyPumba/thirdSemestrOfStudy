@@ -20,7 +20,8 @@
 
 //=====================================================================================================
 
-int main() {
+int main()
+{
     char cmd_string[LIM_OF_MY_SHELL];  // it is string from user
     char *commands[LIM_OF_MY_SHELL];   // it is array of pointers to commands
     char *cmd[LIM_OF_MY_SHELL];        // it is array of pointers to args of command
@@ -60,7 +61,8 @@ int main() {
                 if (pass_pipe != -1)
                     CLOSE(pass_pipe);
                 pass_pipe = pipefd[0];
-            } else {
+            }
+            else {
                 if (pass_pipe != -1)
                     if (dup2(pass_pipe, 0) == -1) {
                         perror("copy stdin error");

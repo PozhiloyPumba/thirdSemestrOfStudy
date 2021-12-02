@@ -16,7 +16,8 @@ void print_id(struct passwd *user, struct group *group, int *groups, int ngroups
 
 //=====================================================================================================
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     if (argc > 2) {
         printf("Username mustn't have more than one word!\n");
         return 0;
@@ -33,7 +34,8 @@ int main(int argc, char *argv[]) {
         print_id(user, group, groups, ngroups);
 
         free(groups);
-    } else {
+    }
+    else {
         struct passwd *user = getpwnam(argv[1]);
         if (!user) {
             printf("User with this name was not found\n");
@@ -54,7 +56,8 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-void print_id(struct passwd *user, struct group *group, int *groups, int ngroups) {
+void print_id(struct passwd *user, struct group *group, int *groups, int ngroups)
+{
     printf("uid=%d(%s) gid=%d(%s) groups=%d(%s)",
            user->pw_uid,
            user->pw_name ? user->pw_name : "",

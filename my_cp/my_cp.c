@@ -33,7 +33,8 @@ int subject_type(const char *name);  // 0 	=> file exist
 
 //=====================================================================================================
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     if (argc == 1) {
         printf("my_cp: missing file operand\n");
         return 0;
@@ -87,7 +88,8 @@ int main(int argc, char *argv[]) {
                         return errno;
                     }
                     fd2 = open(full_name, O_CREAT | O_WRONLY | O_TRUNC, 0777);
-                } else {
+                }
+                else {
                     perror("Error open write");
                     continue;
                 }
@@ -105,7 +107,8 @@ int main(int argc, char *argv[]) {
             CLOSE(fd1, fd2);
         }
         return 0;
-    } else {
+    }
+    else {
         int fd1 = open(argv[pos_files], O_RDONLY);
         if (fd1 < 0) {
             perror("Error open read");
@@ -139,7 +142,8 @@ int main(int argc, char *argv[]) {
                     return errno;
                 }
                 fd2 = open(full_name, O_CREAT | O_WRONLY | O_TRUNC, 0777);
-            } else {
+            }
+            else {
                 perror("Error open write");
                 return errno;
             }
@@ -163,7 +167,8 @@ int main(int argc, char *argv[]) {
 
 //=====================================================================================================
 
-char fill_options(int argc, char *argv[]) {
+char fill_options(int argc, char *argv[])
+{
     struct option longopts[] = {{"force", 0, 0, 'f'}, {"interactive", 0, 0, 'i'}, {"verbose", 0, 0, 'v'}, {0, 0, 0, 0}};
 
     int c;
@@ -192,7 +197,8 @@ char fill_options(int argc, char *argv[]) {
 
 //-----------------------------------------------------------------------------------------------------
 
-int copy(int fd1, int fd2) {
+int copy(int fd1, int fd2)
+{
     char str[SIZE_BUFFER];
 
     while (1) {
@@ -219,7 +225,8 @@ int copy(int fd1, int fd2) {
 
 //-----------------------------------------------------------------------------------------------------
 
-char *create_file_name(const char *dir_name, const char *file_name) {
+char *create_file_name(const char *dir_name, const char *file_name)
+{
     size_t name_dir_len = strlen(dir_name);
     int slash = 0;
 
@@ -247,7 +254,8 @@ char *create_file_name(const char *dir_name, const char *file_name) {
 
 //-----------------------------------------------------------------------------------------------------
 
-int subject_type(const char *name) {
+int subject_type(const char *name)
+{
     struct stat info;
     int stat_error = stat(name, &info);
     if (stat_error < 0) {

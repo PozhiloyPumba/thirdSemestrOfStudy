@@ -14,13 +14,15 @@
 
 //=====================================================================================================
 
-double transform_time(struct timeval *tv1, struct timeval *tv2) {
+double transform_time(struct timeval *tv1, struct timeval *tv2)
+{
     return ((double)tv2->tv_sec + (double)tv2->tv_usec / 1000000) - ((double)tv1->tv_sec + (double)tv1->tv_usec / 1000000);
 }
 
 //=====================================================================================================
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     if (argc < 2) {
         printf("Enter command!\n");
         return 0;
@@ -56,7 +58,8 @@ int main(int argc, char *argv[]) {
             perror("Error of close");
             return errno;
         }
-    } else
+    }
+    else
         close(pipe_fd[1]);
 
     struct timeval tv1, tv2;
@@ -101,7 +104,8 @@ int main(int argc, char *argv[]) {
 
             if (isspace(str[i])) {
                 condition = SPACE_COND;
-            } else {
+            }
+            else {
                 if (condition == SPACE_COND) {
                     count_words++;
                     condition = WORD_COND;

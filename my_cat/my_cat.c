@@ -14,10 +14,12 @@ int copy_in_stdout(int fd1);
 
 //=====================================================================================================
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     if (argc == 1) {
         copy_in_stdout(0);
-    } else {
+    }
+    else {
         for (int i = 1; i < argc; i++) {
             int fd = open(argv[i], O_RDONLY);
             if (fd < 0) {
@@ -40,7 +42,8 @@ int main(int argc, char *argv[]) {
 
 //=====================================================================================================
 
-int copy_in_stdout(int fd1) {
+int copy_in_stdout(int fd1)
+{
     char str[SIZE_BUFFER];
 
     while (1) {
