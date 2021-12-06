@@ -10,29 +10,29 @@
 
 //=====================================================================================================
 
-int copy_in_stdout(int fd1);
+int copy_in_stdout (int fd1);
 
 //=====================================================================================================
 
-int main(int argc, char *argv[])
+int main (int argc, char *argv[])
 {
     if (argc == 1) {
-        copy_in_stdout(0);
+        copy_in_stdout (0);
     }
     else {
         for (int i = 1; i < argc; i++) {
-            int fd = open(argv[i], O_RDONLY);
+            int fd = open (argv[i], O_RDONLY);
             if (fd < 0) {
-                perror("Error open");
+                perror ("Error open");
                 return errno;
             }
 
-            if (copy_in_stdout(fd) < 0) {
-                perror("Error copy");
+            if (copy_in_stdout (fd) < 0) {
+                perror ("Error copy");
                 return errno;
             }
-            if (close(fd) < 0) {
-                perror("Error close");
+            if (close (fd) < 0) {
+                perror ("Error close");
                 return errno;
             }
         }
@@ -42,14 +42,14 @@ int main(int argc, char *argv[])
 
 //=====================================================================================================
 
-int copy_in_stdout(int fd1)
+int copy_in_stdout (int fd1)
 {
     char str[SIZE_BUFFER];
 
     while (1) {
-        int end = read(fd1, str, SIZE_BUFFER);
+        int end = read (fd1, str, SIZE_BUFFER);
         if (end < 0) {
-            perror("Error read");
+            perror ("Error read");
             return errno;
         }
         if (!end)
@@ -57,9 +57,9 @@ int copy_in_stdout(int fd1)
 
         int position = 0;
         while (position < end) {
-            int wr_count = write(1, str + position, end - position);
+            int wr_count = write (1, str + position, end - position);
             if (wr_count < 0)
-                perror("Error write");
+                perror ("Error write");
 
             position += wr_count;
         }

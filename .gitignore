@@ -2,3 +2,5 @@
 .vscode/
 .dist/
 *.sh
+po*
+signals
