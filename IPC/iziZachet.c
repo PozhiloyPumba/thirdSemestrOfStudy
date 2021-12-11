@@ -30,7 +30,7 @@ int main (int argc, char *argv[])
     struct sembuf begin[] = {{0, 1, 0}};
     struct sembuf end[] = {{0, -1, 0}};
     key_t key;
-    if ((key = ftok ("./iziZachet.c", 'a')) == (key_t)(-1)) {
+    if ((key = ftok ("./iziZachet.c", 'a')) == (key_t) (-1)) {
         perror ("IPC error: ftok");
         exit (1);
     }
@@ -39,9 +39,9 @@ int main (int argc, char *argv[])
     if (((sem_id = semget (key, 1, IPC_CREAT | IPC_EXCL | 0660)) == -1) && (errno == EEXIST)) {
         sem_id = semget (key, 1, 0660);
         semop (sem_id, begin, 1);
-        
+
         slowPrint ("Goodbye!");
-        
+
         semop (sem_id, end, 1);
 
         if (!semctl (sem_id, 0, GETVAL, 0))
@@ -51,9 +51,9 @@ int main (int argc, char *argv[])
         semctl (sem_id, 0, SETVAL, 0);
 
         semop (sem_id, begin, 1);
-        
+
         slowPrint ("Hello world!");
-        
+
         semop (sem_id, end, 1);
 
         if (!semctl (sem_id, 0, GETVAL, 0))
