@@ -152,7 +152,7 @@ int main (int argc, char *argv[])
         if ((options >> 2) & 1)
             printf ("\'%s\' -> \'%s\'\n", argv[pos_files], full_name);
 
-        if (dir_is)
+        if (dir_is == 1)    // this was fail on pair was "if (dir_is)"
             free (full_name);
 
         if (copy (fd1, fd2) < 0) {
