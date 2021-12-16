@@ -18,7 +18,8 @@
         }                                    \
     } while (0)
 
-#define POISON -1
+const int POISON = -1;
+const int NUMSINGERS = 33;
 
 //=====================================================================================================
 
@@ -28,6 +29,8 @@ struct dummy_msg_struct {
 };
 
 //=====================================================================================================
+
+char *generateSong (int argc, char **argv);
 
 char *getAlfabet (char *song);
 
@@ -40,9 +43,11 @@ int singer (char *song);
 int main (int argc, char *argv[])
 {
     ERRORCHECKER (
-        argc != 2, {printf ("Please input correct song))\n"); return 0; }, 0);
+        argc < 2, {printf ("Please input correct song))\n"); return 0; }, 0);
 
-    char *alfabet = getAlfabet (argv[1]);
+    char *song = generateSong (argc, argv);
+
+    char *alfabet = getAlfabet (song);
 
     key_t key;
     ERRORCHECKER ((key = ftok ("./singers.c", 'a')) == (key_t)(-1), { perror ("IPC error: ftok"); }, errno);
@@ -60,23 +65,46 @@ int main (int argc, char *argv[])
     semctl (sem_id, 0, SETVAL, 0);
 
     pid_t pid = 0;
-    for (int i = 0; i < 33; ++i) {
+    for (int i = 0; i < NUMSINGERS; ++i) {
         pid = fork ();
         if (!pid) {
-            singer (argv[1]);
+            singer (song);
+            free (song);
             return 0;
         }
     }
 
-    for (int i = 0; i < 33; ++i)
+    for (int i = 0; i < NUMSINGERS; ++i)
         wait (NULL);
 
+    free (song);
     msgctl (alfabetMsg, IPC_RMID, NULL);
     semctl (sem_id, IPC_RMID, 0);
     return 0;
 }
 
 //=====================================================================================================
+
+char *generateSong (int argc, char **argv)
+{
+    int sumLen = 0;
+    for (int i = 1; i < argc; ++i)
+        sumLen += strlen (argv[i]) + 1;
+
+    char *song = (char *)malloc (sizeof (char) * (sumLen + 1));
+    song[0] = 0;
+
+    for (int i = 1; i < argc; ++i) {
+        strcat (song, argv[i]);
+        strcat (song, " ");
+    }
+
+    song[sumLen - 1] = 0;
+
+    return song;
+}
+
+//-----------------------------------------------------------------------------------------------------
 
 char *getAlfabet (char *song)
 {
@@ -112,7 +140,7 @@ void fillAlfQueue (int queue_id, char *alf)
     int len = strlen (alf);
     struct dummy_msg_struct forAlf = {1, 0};
 
-    for (int i = 0; i < 33; ++i) {
+    for (int i = 0; i < NUMSINGERS; ++i) {
         if (i >= len)
             forAlf.mtext[0] = POISON;
         else
@@ -157,6 +185,7 @@ int singer (char *song)
             ;
 
         putchar (mySym);
+        printf (" [%d]\n", getpid ());
         fflush (NULL);
 
         semop (sem_id, next, 1);
