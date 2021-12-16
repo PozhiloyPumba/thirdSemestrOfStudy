@@ -30,7 +30,7 @@ int main (int argc, char *argv[])
     struct sembuf begin[] = {{0, 1, 0}};
     struct sembuf end[] = {{0, -1, 0}};
     key_t key;
-    if ((key = ftok ("./iziZachet.c", 'a')) == (key_t) (-1)) {
+    if ((key = ftok ("./iziZachet.c", 'a')) == (key_t)(-1)) {
         perror ("IPC error: ftok");
         exit (1);
     }
